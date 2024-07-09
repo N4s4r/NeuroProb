@@ -1,5 +1,6 @@
 import numpy as np
 
+import multievent
 import utils
 
 class NeuroProb:
@@ -40,7 +41,7 @@ class NeuroProb:
     def update_excitability(self):
         self.excitability = self.baseline_excitability + self.cross_excitability * np.dot(self.connectivity, self.state)
     
-    # TODO: Class for the events
+    # TODO: Class for the events, and restart this part
     def simulate(self, duration=np.inf):
         time = 0
         event = np.ones(self.num_regions) * np.inf
