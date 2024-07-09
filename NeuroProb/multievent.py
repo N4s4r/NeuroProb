@@ -4,6 +4,15 @@ END = 0
 ACTIVATE = 1
 DEACTIVATE = 2
 
+def event_code_to_string(event):
+    if event == END:
+        return "END"
+    if event == ACTIVATE:
+        return "ACTIVATE"
+    if event == DEACTIVATE:
+        return "DEACTIVATE"
+    return "UNKNOWN"
+
 class Multievent:
     def __init__(self, events=[], times=[], regions=[]):
         assert len(events) == len(times), "Number of events must match number of times"
@@ -27,5 +36,5 @@ class Multievent:
     def __str__(self):
         string = ""
         for event, time, region in zip(self.events, self.times, self.regions):
-            string += f"{time:.2f}: {event} {region}\n"
+            string += f"{time:.2f}: {event_code_to_string(event)} {region}\n"
         return string
