@@ -42,9 +42,9 @@ class NeuroProb:
         self.excitability = self.baseline_excitability + self.cross_excitability * np.dot(self.connectivity, self.state)
     
     # TODO: Class for the events, and restart this part
-    def simulate(self, duration=np.inf):
+    def simulate(self, duration):
+        me = multievent.Multievent()
         time = 0
-        event = np.ones(self.num_regions) * np.inf
         while True:
             # Stop the simulation if all regions are in the seizure state
             if np.all(self.state == 1):
@@ -63,12 +63,13 @@ class NeuroProb:
             # Update the state of the region
             self.state[min_region] = 1
             # Update the event
-            event[min_region] = time
+            me.add_event(multievent.ACTIVATE, time, min_region)
             # Update the excitability
             self.update_excitability()
-        return event
+        me.add_event(multievent.END, duration, -1)
+        return me
             
     
 
 neuroprob = NeuroProb(np.random.rand(5, 5))
-print(neuroprob.simulate(1))
+print(neuroprob.simulate(duration=1))
