@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 import multievent
 import utils
@@ -21,13 +22,13 @@ class NeuroProb:
         # Set baseline excitability
         self.set_excitability(**args)
     
-    def set_region_names(self, region_names=None):
+    def set_region_names(self, region_names=None, **args):
         if region_names is None:
             region_names = [f"CH-{i}" for i in range(self.num_regions)]
         assert len(region_names) == self.num_regions, "Number of region names must match number of regions"
         self.region_names = region_names
     
-    def set_excitability(self, baseline_excitability=None, cross_excitability=None):
+    def set_excitability(self, baseline_excitability=None, cross_excitability=None, **args):
         if baseline_excitability is None:
             baseline_excitability = np.ones(self.num_regions)
         if cross_excitability is None:
@@ -68,8 +69,21 @@ class NeuroProb:
             self.update_excitability()
         me.add_event(multievent.END, duration, -1)
         return me
+
+
+    # TODO: Implement the function to compute the likelihood
+    def log_likelihood(me):
+        return 1
             
     
+C = np.array([
+    [0, 1, 1, 0],
+    [1, 0, 0, 1],
+    [1, 0, 0, 1],
+    [0, 1, 1, 0]
+])
+neuroprob = NeuroProb(C, baseline_excitability=[0.9, 0.1, 0.1, 0.1], cross_excitability=[0.5, 0.5, 0.5, 0.5])
 
-neuroprob = NeuroProb(np.random.rand(5, 5))
-print(neuroprob.simulate(duration=1))
+me = neuroprob.simulate(duration=20)
+
+me.plot(neuroprob.region_names)
